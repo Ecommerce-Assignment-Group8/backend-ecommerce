@@ -14,7 +14,7 @@ public class CartItem {
     @GeneratedValue()
     private Integer id;
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "trainee_id")
     private User user;
     @ManyToOne
     @JoinColumn(name = "product_id")

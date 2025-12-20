@@ -31,7 +31,8 @@ public class User {
     private String certificate;
     private String bio;
     private String specialty;
-    private int experienceYear;
+    @Column(nullable = true)
+    private Integer experienceYear;
     private boolean isBusinesses;
     private String address;
     private String taxCode;

@@ -18,7 +18,7 @@ public class Booking {
     private Integer id;
     private Date date;
     private Status status;
-    private int totalAmount;
+    private Integer totalAmount;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

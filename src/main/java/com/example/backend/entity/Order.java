@@ -18,7 +18,7 @@ public class Order {
     private Integer id;
     private String paymentMethod;
     private Status status;
-    private int totalPrice;
+    private Integer totalPrice;
     private String shippingAddress;
     private Date orderDate;
 

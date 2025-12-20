@@ -17,9 +17,9 @@ public class Product {
     private Integer id;
     private String name;
     private String description;
-    private int price;
+    private Integer price;
     private String image;
-    private int stockQuantity;
+    private Integer stockQuantity;
     @ManyToMany
     @JoinTable(
             name = "product_categories",

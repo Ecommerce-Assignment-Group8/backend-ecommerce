@@ -15,10 +15,10 @@ public class Review {
 
     @Id
     @GeneratedValue
-    private int id;
+    private Integer id;
     private Date reviewDate;
     private String comment;
-    private int rating;
+    private Integer rating;
     @ManyToOne
     @JoinColumn(name = "trainee_id")
     private User user;
