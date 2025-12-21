@@ -1,6 +1,8 @@
 package com.example.backend.service;
 
+
 import com.example.backend.entity.User;
+import com.example.backend.entity.User.Gender;
 import com.example.backend.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +59,23 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public List<User> getAllTrainers(String fullName, Gender gender, String specialty, Integer minExp) {
+        return userRepository.searchTrainers(fullName, gender, specialty, minExp);
+    }
+
+     public List<User> getAllTrainees() {
+       return userRepository.findByRole("TRAINEE");
+    }
+
+     public List<User> getAllBusinesses() {
+        return userRepository.findByRole("BUSINESS");
+    }
+
+
+    public User getUserById(Integer id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     public User updateUser(Integer id, UserUpdateDTO updateDTO) {
