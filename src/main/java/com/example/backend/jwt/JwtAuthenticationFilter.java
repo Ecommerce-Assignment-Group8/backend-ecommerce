@@ -22,8 +22,7 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtService jwtService;
-    @Autowired
-    private UserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String header = request.getHeader("Authorization");
@@ -35,9 +34,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String userEmail = jwtService.extractEmail(jwt);
         String role = jwtService.extractRole(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            if (jwtService.isTokenValid(jwt)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userEmail, jwt, List.of(authority));
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
