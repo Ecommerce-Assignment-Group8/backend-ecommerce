@@ -14,13 +14,17 @@ import java.util.Date;
 public class Review {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Date reviewDate;
+    @Column(columnDefinition = "TEXT")
     private String comment;
     private Integer rating;
     @ManyToOne
     @JoinColumn(name = "trainee_id")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "trainer_id")
+    private User trainer;
 
 }
