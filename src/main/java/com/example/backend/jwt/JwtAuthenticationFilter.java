@@ -26,24 +26,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String header = request.getHeader("Authorization");
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (header == null || !header.startsWith("Bearer")) {
+            System.out.println("Line 30");
             filterChain.doFilter(request, response);
             return;
         }
+        System.out.println("Line 34");
         String jwt = header.substring(7);
         String userEmail = jwtService.extractEmail(jwt);
+        System.out.println("User email: " + userEmail);
         String role = jwtService.extractRole(jwt);
+        Long userId = jwtService.extractUserId(jwt);
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
+            System.out.println("Line 40");
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
             if (jwtService.isTokenValid(jwt)) {
+                System.out.println("Token is valid");
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userEmail, jwt, List.of(authority));
+                        userId, jwt, List.of(authority));
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             } else {
                 // Token expired - send 401 Unauthorized
-
+                System.out.println("Line 50");
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json;charset=UTF-8");
                 response.getWriter().write("{\"error\":\"" + "Invalid Token!" + "\"}");

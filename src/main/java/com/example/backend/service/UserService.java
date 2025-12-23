@@ -59,7 +59,7 @@ public class UserService {
             return ResponseEntity.badRequest().body(Map.of("message","invalid email or password"));
         }
         if(passwordEncoder.matches(loginRequest.getPassword(),user.getPassword())) {
-            String token = jwtService.generateToken(user.getEmail(),user.getRole());
+            String token = jwtService.generateToken(user.getEmail(),user.getRole(), user.getId());
             return ResponseEntity.ok(Map.of("token",token));
         }
         return ResponseEntity.badRequest().body(Map.of("message","invalid email or password"));

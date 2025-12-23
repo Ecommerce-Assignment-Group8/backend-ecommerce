@@ -16,8 +16,8 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
     // other functions can be defined here as needed
     List<User> findByRole(String role);
-    public User findByEmail(String email);
-    public User findByEmailAndRole(String email,String role);
+    User findByEmail(String email);
+    User findByEmailAndRole(String email,String role);
 
 
     @Query("SELECT u FROM User u WHERE " +

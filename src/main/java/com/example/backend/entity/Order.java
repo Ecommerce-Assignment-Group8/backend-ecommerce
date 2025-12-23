@@ -14,9 +14,10 @@ import java.util.Date;
 public class Order {
     public enum Status { FINISHED, PENDING, CANCELLED }
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String paymentMethod;
+    @Enumerated(EnumType.STRING)
     private Status status;
     private Integer totalPrice;
     private String shippingAddress;

@@ -16,10 +16,11 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private static final String SECRET_KEY = "ecommerce_assignment_2_111111111111111111111111111111111111111111111111111111111111111111111111";
-    public String generateToken(String email, String role) {
+    public String generateToken(String email, String role, Integer userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         claims.put("email", email);
+        claims.put("userId", userId);
         return Jwts.builder()
                 .setSubject(email)
                 .setClaims(claims)
@@ -29,7 +30,10 @@ public class JwtService {
                 .compact();
     }
     public String extractEmail(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, claims -> claims.get("email", String.class));
+    }
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
     public String extractRole(String token) {
         return extractClaim(token, claims -> claims.get("role", String.class));
@@ -49,6 +53,6 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
     public boolean isTokenValid(String token) {
-        return  isTokenExpired(token);
+        return  !isTokenExpired(token);
     }
 }
