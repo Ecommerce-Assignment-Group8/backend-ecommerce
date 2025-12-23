@@ -30,7 +30,7 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy Trainer"));
 
         booking.setTrainee(trainee);
-        booking.setTrainer(trainer);
+//        booking.setTrainer(trainer);
         booking.setDate(bookingCreateDTO.getDate());
         booking.setTotalAmount(bookingCreateDTO.getTotalAmount());
         booking.setStatus(Booking.Status.PENDING); // Mặc định là PENDING khi mới tạo

@@ -28,6 +28,6 @@ public class Booking {
     @JoinColumn(name = "trainee_id")
     private User trainee;
     @ManyToOne
-    @JoinColumn(name = "trainer_id")
-    private User trainer;
+    @JoinColumn(name = "package_id")
+    private Package package_id;
 }
