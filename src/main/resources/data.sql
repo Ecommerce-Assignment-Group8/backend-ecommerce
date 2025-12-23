@@ -46,7 +46,7 @@ VALUES
     ( 'BUSINESS', '0903000005', 'admin@swim-center.com', '$2a$10$7rbrq6v/AInY/U1Nu/Kpeu.x654dTf6fHA9iVUtJ2nHSZb2Ag.nSm', false, false, true, '202 Aquatic Blvd, SYD', 'TAX005', 'Blue Wave Swim Center');
 
 -- 10 PRODUCTS
-INSERT INTO product (name, description, price, image, stock_quantity, category) VALUES
+INSERT INTO "product" (name, description, price, image, stock_quantity, category) VALUES
 ('Whey Protein Isolate', 'Sữa tăng cơ tinh khiết, hấp thụ nhanh', 1500000, 'https://cdn.xaxi.vn/tpcn/img/muscletech-isowhey-100-whey-protein-isolate-vanilla-5-lbs-2-27-kg-135924-631656717617.jpg', 50, 'PROTEIN'),
 ('C4 Original Pre-Workout', 'Tăng cường năng lượng và sự tập trung trước khi tập', 750000, 'https://product.hstatic.net/200000597515/product/c4-original-pre-workout_7e6b13c8bc884404b462d4a43a952518.jpg', 30, 'PRE_WORKOUT'),
 ('BCAA 5000 Powder', 'Hỗ trợ phục hồi cơ bắp và chống dị hóa', 600000, 'https://www.sporter.com/media/catalog/product/o/n/on_bcaa_5000_40sv_unflavored_1.jpg', 40, 'AMINO_ACIDS'),
@@ -59,10 +59,9 @@ INSERT INTO product (name, description, price, image, stock_quantity, category) 
 ('Casein Protein Night', 'Protein hấp thụ chậm giúp nuôi cơ ban đêm', 1400000, 'https://www.nutritionwarehouse.co.nz/cdn/shop/files/0001s_0001_maxs-anabolic-night-rich-chocolate-mousse-900g_600x600.jpg?v=1723087597', 10, 'PROTEIN');
 
 
-
 -- 50 PACKAGE RECORDS
 -- Note: Assuming Trainer IDs start from 11 to 30 based on your previous inserts
-INSERT INTO package (name, price, description, type, thumb_nail_url, is_active, duration, trainer_id)
+INSERT INTO "package" (name, price, description, type, thumb_nail_url, is_active, duration, trainer_id)
 VALUES
 -- Trainer 1 (John Matrix - Bodybuilding)
 ('Elite Bodybuilding Foundation', '2000000', '12-week intensive mass building program.', 'STRENGTH', 'https://example.com/thumb1.jpg', true, 90, 11),
@@ -138,6 +137,10 @@ VALUES
 
 
 -- MULTIPLE ORDERS PER TRAINEE
+-- Ensure `status` column can accept enum string values if it currently exists as smallint
+ALTER TABLE IF EXISTS "order"
+  ALTER COLUMN status TYPE varchar USING status::text;
+
 INSERT INTO "order" (payment_method, status, total_price, shipping_address, order_date, trainee_id)
 VALUES
     -- Alice (Trainee ID: 1) has 3 orders
@@ -150,7 +153,7 @@ VALUES
     ('CREDIT_CARD', 'CANCELLED', 1650000, '456 Oak Ave, SF',  '2023-12-01 11:00:00', 2);
 
 -- ORDER ITEMS FOR THE ABOVE
-INSERT INTO order_item (quantity, order_id, product_id)
+INSERT INTO "order_item" (quantity, order_id, product_id)
 VALUES
     -- Alice's 1st Order (Order ID: 6 based on previous sequence)
     (1, 1, 1), -- Whey Protein
@@ -163,3 +166,42 @@ VALUES
     (2, 4, 1), -- 2x Whey Protein
     -- Bob's 2nd Order
     (1, 5, 6); -- Serious Mass
+
+---- SAMPLE PAYMENTS (tùy tên bảng/cột của bạn)
+INSERT INTO "payments" (user_id, amount, currency, status, stripe_session_id, created_at)
+VALUES
+  (1, 299000, 'vnd', 'PENDING',   'cs_test_seed_001', now()),
+  (1, 299000, 'vnd', 'COMPLETED', 'cs_test_seed_002', now()),
+  (2, 799000, 'vnd', 'CANCELLED', 'cs_test_seed_003', now());
+
+---- SAMPLE CONVERSATIONS (trainee_id, trainer_id)
+INSERT INTO "conversation" (trainee_id, trainer_id, last_message_content, last_message_at)
+VALUES
+  (1, 11, 'Dạ anh, em cảm ơn!', now() - interval '1 day'),
+  (2, 12, 'Em sẽ tập đúng lịch anh nhé!', now() - interval '2 hours'),
+  (3, 13, 'Anh cho em hỏi về chế độ ăn ạ?', now() - interval '30 minutes'),
+  (1, 14, 'Ok em, hẹn gặp buổi sau!', now() - interval '3 days');
+
+---- SAMPLE MESSAGES
+INSERT INTO "messages" (conversation_id, sender_id, content, message_type, send_at, is_read)
+VALUES
+  -- Conversation 1: Alice (id=1) với John Matrix (id=11)
+  (1, 1, 'Anh PT ơi, em muốn giảm mỡ 4 tuần!', 'TEXT', now() - interval '2 days', true),
+  (1, 11, 'Ok em. Anh set lịch 4 buổi/tuần nhé!', 'TEXT', now() - interval '2 days' + interval '5 minutes', true),
+  (1, 1, 'Dạ anh, em cảm ơn!', 'TEXT', now() - interval '1 day', true),
+
+  -- Conversation 2: Bob (id=2) với Sarah Connor (id=12)
+  (2, 2, 'Chào chị, em muốn tăng cơ ạ', 'TEXT', now() - interval '1 day', true),
+  (2, 12, 'Chào em! Chị sẽ lên giáo án HIIT cho em nhé', 'TEXT', now() - interval '1 day' + interval '10 minutes', true),
+  (2, 2, 'Em sẽ tập đúng lịch anh nhé!', 'TEXT', now() - interval '2 hours', false),
+
+  -- Conversation 3: Charlie (id=3) với Mike Mentzer (id=13)
+  (3, 3, 'Anh ơi cho em hỏi về powerlifting ạ', 'TEXT', now() - interval '1 hour', true),
+  (3, 13, 'Em muốn hỏi gì cứ hỏi nhé!', 'TEXT', now() - interval '45 minutes', true),
+  (3, 3, 'Anh cho em hỏi về chế độ ăn ạ?', 'TEXT', now() - interval '30 minutes', false),
+
+  -- Conversation 4: Alice (id=1) với Ellen Ripley (id=14)
+  (4, 1, 'Chị ơi em muốn học CrossFit', 'TEXT', now() - interval '5 days', true),
+  (4, 14, 'Ok em, chị có lớp vào T3 và T5', 'TEXT', now() - interval '5 days' + interval '30 minutes', true),
+  (4, 1, 'Dạ em đăng ký T3 ạ', 'TEXT', now() - interval '4 days', true),
+  (4, 14, 'Ok em, hẹn gặp buổi sau!', 'TEXT', now() - interval '3 days', true);

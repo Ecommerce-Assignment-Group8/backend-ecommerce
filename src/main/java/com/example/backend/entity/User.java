@@ -30,7 +30,7 @@ public class User {
     private String email;
     private String password;
     private String dateOfBirth;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String fullName;
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -41,7 +41,7 @@ public class User {
     private boolean isTrainer;
     private String certificate;
     private String bio;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String specialty;
     @Column(nullable = true)
     private Integer experienceYear;
