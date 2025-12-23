@@ -17,7 +17,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Date reviewDate;
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "text")
     private String comment;
     private Integer rating;
     @ManyToOne
