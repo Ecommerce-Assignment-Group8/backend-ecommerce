@@ -12,19 +12,44 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
+    
+    public enum Category {
+    // Key(displayName)
+    PROTEIN("Protein"),
+    PRE_WORKOUT("Pre-Workout"),
+    AMINO_ACIDS("Amino Acids"),
+    CREATINE("Creatine"),
+    WEIGHT_MANAGEMENT("Giảm cân & Đốt mỡ"),
+    MASS_GAINER("Tăng cân"),
+    VITAMINS_MINERALS("Vitamin & Khoáng chất"),
+    RECOVERY_SLEEP("Phục hồi & Giấc ngủ"),
+    ENERGY_ENDURANCE("Năng lượng & Sức bền");
+
+    private final String displayName;
+
+    Category(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+    }
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(columnDefinition = "TEXT")
     private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
-    private int price;
+    private Integer price;
+
     private String image;
-    private int stockQuantity;
-    @ManyToMany
-    @JoinTable(
-            name = "product_categories",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    List<Category> categories;
+
+    private Integer stockQuantity;
+    
+    @Enumerated(EnumType.STRING)
+    private Category category;
 }

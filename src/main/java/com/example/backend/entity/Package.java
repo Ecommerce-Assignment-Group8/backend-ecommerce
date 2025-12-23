@@ -5,26 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review {
-
+@Entity
+public class Package {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Date reviewDate;
-    @Column(columnDefinition = "TEXT")
-    private String comment;
-    private Integer rating;
-    @ManyToOne
-    @JoinColumn(name = "trainee_id")
-    private User user;
+    private String name;
+    private String price;
+    private String description;
+    private String type;
+    private String thumbNailUrl;
+    private boolean isActive;
+    private Integer duration;
     @ManyToOne
     @JoinColumn(name = "trainer_id")
-    private User trainer;
-
+    private User trainer_id;
 }

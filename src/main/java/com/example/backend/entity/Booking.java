@@ -14,17 +14,20 @@ import java.util.Date;
 public class Booking {
     public enum Status { FINISHED, PENDING, CANCELLED }
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
-    private int totalAmount;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    @ManyToOne
-    @JoinColumn(name = "trainer_id")
-    private Booking booking;
 
-
+    private Integer totalAmount;
+    @ManyToOne
+    @JoinColumn(name = "trainee_id")
+    private User trainee;
+    @ManyToOne
+    @JoinColumn(name = "package_id")
+    private Package bookingPackage;
 }
