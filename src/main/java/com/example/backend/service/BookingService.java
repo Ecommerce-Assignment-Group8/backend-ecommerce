@@ -10,14 +10,16 @@ import java.util.List;
 
 import com.example.backend.dto.BookingCreateDTO;
 import com.example.backend.entity.User;
+import com.example.backend.entity.Package;
 import com.example.backend.repository.UserRepository;
-
+import com.example.backend.repository.PackageRepository;
 
 @Service
 public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
     private @Autowired UserRepository userRepository;
+    private @Autowired PackageRepository packageRepository;
 
     public Booking createBooking(BookingCreateDTO bookingCreateDTO) {
         Booking booking = new Booking();
@@ -25,12 +27,12 @@ public class BookingService {
         User trainee = userRepository.findById(bookingCreateDTO.getTraineeId()).filter(user -> user.isTrainee())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy Trainee"));
 
-        // 2. Tìm Trainer từ ID
-        User trainer = userRepository.findById(bookingCreateDTO.getTrainerId()).filter(user -> user.isTrainer())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy Trainer"));
+        // 2. Tìm package từ ID
+        Package pkg = packageRepository.findById(bookingCreateDTO.getPackageId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Package"));
 
         booking.setTrainee(trainee);
-//        booking.setTrainer(trainer);
+        booking.setBookingPackage(pkg);
         booking.setDate(bookingCreateDTO.getDate());
         booking.setTotalAmount(bookingCreateDTO.getTotalAmount());
         booking.setStatus(Booking.Status.PENDING); // Mặc định là PENDING khi mới tạo
@@ -39,6 +41,10 @@ public class BookingService {
 
     public List<Booking> getAllBookings() {
         return bookingRepository.findAll();
+    }
+
+    public List<Booking> getBookingsByTraineeId(Integer traineeId) {
+        return bookingRepository.findByTraineeId(traineeId);
     }
 
     public Booking updateStatus(Integer id, Booking.Status newStatus) {

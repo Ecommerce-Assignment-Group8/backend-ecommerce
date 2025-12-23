@@ -30,6 +30,11 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getAllBookings());
     }
 
+    @GetMapping("/{traineeId}")   // error because of not authorized
+    public ResponseEntity<List<Booking>> getByTrainee(@PathVariable Integer traineeId) {
+        return ResponseEntity.ok(bookingService.getBookingsByTraineeId(traineeId));
+    }
+
     // API update status of Booking
     @PatchMapping("/{id}/status")
     public ResponseEntity<Booking> updateStatus(

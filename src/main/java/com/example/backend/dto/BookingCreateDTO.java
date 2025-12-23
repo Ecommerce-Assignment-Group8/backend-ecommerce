@@ -5,8 +5,6 @@ import java.util.Date;
 import com.example.backend.entity.Booking.Status;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
@@ -17,7 +15,7 @@ public class BookingCreateDTO {
     private Integer traineeId;
 
     @Column(nullable = false)
-    private Integer trainerId;
+    private Integer packageId;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;

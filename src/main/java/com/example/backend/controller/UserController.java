@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import com.example.backend.dto.UserCreateDTO;
 import com.example.backend.dto.UserUpdateDTO;
 
 @RestController
@@ -20,10 +19,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
-    public User registerUser(@RequestBody UserCreateDTO user) {
-        return userService.createUser(user);
-    }
 
     @GetMapping
     public List<User> getAllUsers() {

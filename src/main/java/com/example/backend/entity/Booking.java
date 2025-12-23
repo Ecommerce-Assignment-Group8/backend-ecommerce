@@ -29,5 +29,5 @@ public class Booking {
     private User trainee;
     @ManyToOne
     @JoinColumn(name = "package_id")
-    private Package package_id;
+    private Package bookingPackage;
 }

@@ -64,43 +64,6 @@ public class UserService {
         }
         return ResponseEntity.badRequest().body(Map.of("message","invalid email or password"));
     }
-    public User createUser(UserCreateDTO user) {
-        // hash password or other business logic can be added here
-        User newUser = new User();
-        newUser.setFullName(user.getFullName());
-        newUser.setPhoneNumber(user.getPhoneNumber());
-        newUser.setPassword(user.getPassword());
-
-        newUser.setTrainee(user.isTrainee());
-        newUser.setTrainer(user.isTrainer());
-        newUser.setBusinesses(user.isBusinesses());
-
-        if(user.isTrainer()) {
-            newUser.setRole("TRAINER");
-        }
-        else if(user.isBusinesses()) {
-            newUser.setRole("BUSINESSES");
-        }
-        else {
-            newUser.setRole("TRAINEE");
-        }
-
-        newUser.setAddress(user.getAddress());
-        newUser.setGoal(user.getGoal());
-        newUser.setHeight(user.getHeight());
-        newUser.setWeight(user.getWeight());
-        newUser.setBio(user.getBio());
-        newUser.setCertificate(user.getCertificate());
-        newUser.setSpecialty(user.getSpecialty());
-        newUser.setExperienceYear(user.getExperienceYear());
-        newUser.setDateOfBirth(user.getDateOfBirth());
-        newUser.setEmail(user.getEmail());
-        newUser.setGender(user.getGender());
-        newUser.setTaxCode(user.getTaxCode());
-        newUser.setBusinessName(user.getBusinessName());
-
-        return userRepository.save(newUser);
-    }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
