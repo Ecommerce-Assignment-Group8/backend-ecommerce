@@ -28,7 +28,7 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/{user_id}")
-    public ResponseEntity<List<OrderListResponseDTO>> findByUserId(@PathVariable Integer user_id){
+    public ResponseEntity<List<OrderListResponseDTO>> findByUserId(@PathVariable Integer user_id) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof Long) {
@@ -37,7 +37,7 @@ public class OrderController {
         } else {
             System.out.println("User is Anonymous");
         }
-        String role =  (String) SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+        String role = (String) SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElse(null);
@@ -49,6 +49,13 @@ public class OrderController {
     public ResponseEntity<CreateOrderResponseDTO> createOrder(
             @PathVariable Integer userId,
             @RequestBody CreateOrderRequestDTO request) {
+        System.out.println("🔥 OrderController.createOrder called");
+        System.out.println("   userId: " + userId);
+        System.out.println("   paymentMethod: " + request.getPaymentMethod());
+        System.out.println("   shippingAddress: " + request.getShippingAddress());
+        System.out.println("   items: " + (request.getItems() != null ? request.getItems().size() : "null"));
+        System.out.println(
+                "   cartItemIds: " + (request.getCartItemIds() != null ? request.getCartItemIds().size() : "null"));
         return orderService.createOrder(userId, request);
     }
 
@@ -64,4 +71,3 @@ public class OrderController {
         return orderService.updateOrderStatus(id, statusUpdate.getStatus());
     }
 }
-

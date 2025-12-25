@@ -14,40 +14,38 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/payments")
-@Tag(name = "Payment API", description = "API cổng thanh toán Stripe")
+@Tag(name = "Payment API", description = "API thanh toán VietQR + SePay")
 public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
 
-    @PostMapping("/create-checkout-session")
-    @Operation(summary = "Tạo phiên thanh toán", 
-               description = "Tạo phiên thanh toán Stripe Checkout và trả về URL chuyển hướng đến trang thanh toán")
-    public ResponseEntity<PaymentResponseDTO> createCheckoutSession(@RequestBody PaymentRequestDTO request) {
-        PaymentResponseDTO response = paymentService.createCheckoutSession(request);
+    @PostMapping("/vietqr")
+    @Operation(summary = "Tạo thanh toán VietQR", 
+               description = "Tạo mã QR thanh toán và trả về URL ảnh QR để hiển thị")
+    public ResponseEntity<PaymentResponseDTO> createVietQRPayment(@RequestBody PaymentRequestDTO request) {
+        PaymentResponseDTO response = paymentService.createVietQRPayment(request);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/success")
-    @Operation(summary = "Xử lý thanh toán thành công", 
-               description = "Callback endpoint khi thanh toán thành công từ Stripe")
-    public ResponseEntity<PaymentResponseDTO> handlePaymentSuccess(@RequestParam String session_id) {
-        PaymentResponseDTO response = paymentService.handlePaymentSuccess(session_id);
+    @GetMapping("/verify")
+    @Operation(summary = "Xác nhận thanh toán", 
+               description = "FE polling endpoint để kiểm tra trạng thái thanh toán từ SePay")
+    public ResponseEntity<PaymentResponseDTO> verifyPayment(@RequestParam Integer orderId) {
+        PaymentResponseDTO response = paymentService.verifyPayment(orderId);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/cancel")
-    @Operation(summary = "Xử lý hủy thanh toán", 
-               description = "Callback endpoint khi người dùng hủy thanh toán")
-    public ResponseEntity<PaymentResponseDTO> handlePaymentCancel() {
-        PaymentResponseDTO response = new PaymentResponseDTO();
-        response.setStatus("CANCELLED");
-        response.setMessage("Thanh toán đã bị hủy");
-        return ResponseEntity.ok(response);
+    @GetMapping("/order/{orderId}")
+    @Operation(summary = "Lịch sử thanh toán theo đơn hàng", 
+               description = "Lấy danh sách các lần thanh toán của một đơn hàng")
+    public ResponseEntity<List<Payment>> getPaymentsByOrder(@PathVariable Integer orderId) {
+        List<Payment> payments = paymentService.getPaymentsByOrderId(orderId);
+        return ResponseEntity.ok(payments);
     }
 
     @GetMapping("/history/{userId}")
-    @Operation(summary = "Lịch sử thanh toán", 
+    @Operation(summary = "Lịch sử thanh toán theo user", 
                description = "Lấy lịch sử thanh toán của người dùng")
     public ResponseEntity<List<Payment>> getPaymentHistory(@PathVariable Integer userId) {
         List<Payment> payments = paymentService.getPaymentHistory(userId);
@@ -60,5 +58,12 @@ public class PaymentController {
     public ResponseEntity<Payment> getPaymentById(@PathVariable Long paymentId) {
         Payment payment = paymentService.getPaymentById(paymentId);
         return ResponseEntity.ok(payment);
+    }
+
+    @GetMapping("/debug/sepay")
+    @Operation(summary = "Debug SePay", 
+               description = "Kiểm tra kết nối SePay API và xem transactions")
+    public ResponseEntity<java.util.Map<String, Object>> debugSePay() {
+        return ResponseEntity.ok(paymentService.debugSePayTransactions());
     }
 }

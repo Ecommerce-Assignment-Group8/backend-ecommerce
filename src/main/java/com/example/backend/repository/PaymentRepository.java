@@ -12,9 +12,11 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     
     List<Payment> findByUserId(Integer userId);
     
-    Optional<Payment> findByStripeSessionId(String sessionId);
+    List<Payment> findByOrderId(Integer orderId);
     
-    Optional<Payment> findByStripePaymentIntentId(String paymentIntentId);
+    Optional<Payment> findByPaymentRef(String paymentRef);
     
-    List<Payment> findByBookingId(Integer bookingId);
+    Optional<Payment> findBySepayTransactionRef(String sepayTransactionRef);
+    
+    Optional<Payment> findTopByOrderIdOrderByCreatedAtDesc(Integer orderId);
 }

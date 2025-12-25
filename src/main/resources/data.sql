@@ -174,11 +174,12 @@ VALUES
     (1, 5, 6); -- Serious Mass
 
 ---- SAMPLE PAYMENTS (tùy tên bảng/cột của bạn)
-INSERT INTO "payments" (user_id, amount, currency, status, stripe_session_id, created_at)
+INSERT INTO "payments"
+(order_id, user_id, amount, currency, status, payment_method, payment_ref, qr_image_url, bank_bin, bank_account_number, bank_account_name, created_at, updated_at)
 VALUES
-  (1, 299000, 'vnd', 'PENDING',   'cs_test_seed_001', now()),
-  (1, 299000, 'vnd', 'COMPLETED', 'cs_test_seed_002', now()),
-  (2, 799000, 'vnd', 'CANCELLED', 'cs_test_seed_003', now());
+(1, 1, 299000, 'VND', 'PENDING',   'VIETQR_SEPAY', 'PAY_ORD1_001', 'https://img.vietqr.io/image/970423-0123456789-compact.png?amount=299000&addInfo=PAY_ORD1_001', '970423', '0123456789', 'Your Company Name', now(), now()),
+(1, 1, 299000, 'VND', 'COMPLETED', 'VIETQR_SEPAY', 'PAY_ORD1_002', 'https://img.vietqr.io/image/970423-0123456789-compact.png?amount=299000&addInfo=PAY_ORD1_002', '970423', '0123456789', 'Your Company Name', now(), now()),
+(2, 2, 799000, 'VND', 'CANCELLED', 'VIETQR_SEPAY', 'PAY_ORD2_001', 'https://img.vietqr.io/image/970423-0123456789-compact.png?amount=799000&addInfo=PAY_ORD2_001', '970423', '0123456789', 'Your Company Name', now(), now());
 
 ---- SAMPLE CONVERSATIONS (trainee_id, trainer_id)
 INSERT INTO "conversation" (trainee_id, trainer_id, last_message_content, last_message_at)
