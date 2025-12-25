@@ -27,9 +27,12 @@ public class SecurityConfig {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/webjars/**", "/api-docs/**", "/swagger-resources/**", "/api/auth/**", "/users/trainers/**", "/products/**", "/trainers/**", "/users/**", "/reviews/trainer/**", "/bookings", "/bookings/**", "/reviews","/api/order/**", "/api/admin/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/webjars/**",
+                                "/api-docs/**", "/swagger-resources/**", "/api/auth/**", "/users/trainers/**",
+                                "/products/**", "/trainers/**", "/users/**", "/reviews/trainer/**", "/bookings",
+                                "/bookings/**", "/reviews", "/api/order/**", "/api/payments/**", "/api/admin/**")
+                        .permitAll()
+                        .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

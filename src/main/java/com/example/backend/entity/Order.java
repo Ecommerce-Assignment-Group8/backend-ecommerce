@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -13,12 +15,16 @@ import java.util.Date;
 @NoArgsConstructor
 public class Order {
     public enum Status { FINISHED, PENDING, CANCELLED }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    
     private String paymentMethod;
+    
     @Enumerated(EnumType.STRING)
     private Status status;
+    
     private Integer totalPrice;
     private String shippingAddress;
     private Date orderDate;
@@ -26,4 +32,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "trainee_id")
     private User user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payments = new ArrayList<>();
 }
