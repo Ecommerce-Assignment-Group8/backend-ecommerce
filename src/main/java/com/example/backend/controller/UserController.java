@@ -45,10 +45,32 @@ public class UserController {
     public List<User> getAllTrainees() {
         return userService.getAllTrainees();
     }
+    @GetMapping("/me")
+    public ResponseEntity<User> getCurrentUser() {
+        Object principal = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof Long) {
+            Long userId = (Long) principal;
+            User user = userService.getUserById(userId.intValue());
+            return ResponseEntity.ok(user);
+        }
+        return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id) {
         User user = userService.getUserById(id);
         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<User> updateCurrentUser(@RequestBody UserUpdateDTO updateDTO) {
+        Object principal = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof Long) {
+            Long userId = (Long) principal;
+            User updatedUser = userService.updateUser(userId.intValue(), updateDTO);
+            return ResponseEntity.ok(updatedUser);
+        }
+        return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
     }
 
     @PutMapping("/{id}")

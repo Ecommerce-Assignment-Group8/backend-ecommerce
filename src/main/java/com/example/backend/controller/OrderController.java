@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.CreateOrderRequestDTO;
+import com.example.backend.dto.OrderStatusUpdateDTO;
 import com.example.backend.dto.response.CreateOrderResponseDTO;
 import com.example.backend.dto.response.OrderListResponseDTO;
+import com.example.backend.dto.response.OrderResponseDTO;
 import com.example.backend.service.OrderService;
 
 @RestController
@@ -49,6 +52,18 @@ public class OrderController {
             @PathVariable Integer userId,
             @RequestBody CreateOrderRequestDTO request) {
         return orderService.createOrder(userId, request);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderListResponseDTO>> getAllOrders() {
+        return orderService.getAllOrders();
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<OrderResponseDTO> updateOrderStatus(
+            @PathVariable Integer id,
+            @RequestBody OrderStatusUpdateDTO statusUpdate) {
+        return orderService.updateOrderStatus(id, statusUpdate.getStatus());
     }
 }
 

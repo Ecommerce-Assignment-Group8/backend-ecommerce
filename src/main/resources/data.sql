@@ -45,6 +45,12 @@ VALUES
     ( 'BUSINESS', '0903000004', 'hello@fitness-first.com', '$2a$10$7rbrq6v/AInY/U1Nu/Kpeu.x654dTf6fHA9iVUtJ2nHSZb2Ag.nSm', false, false, true, '101 Corporate Plaza, LDN', 'TAX004', 'Fitness First'),
     ( 'BUSINESS', '0903000005', 'admin@swim-center.com', '$2a$10$7rbrq6v/AInY/U1Nu/Kpeu.x654dTf6fHA9iVUtJ2nHSZb2Ag.nSm', false, false, true, '202 Aquatic Blvd, SYD', 'TAX005', 'Blue Wave Swim Center');
 
+-- ADMIN USER
+-- Email: admin@fitconnect.com
+-- Password: admin123
+INSERT INTO "user" (role, phone_number, email, password, full_name, is_trainee, is_trainer, is_businesses)
+VALUES ('ADMIN', '0900000000', 'admin@fitconnect.com', '$2a$10$7rbrq6v/AInY/U1Nu/Kpeu.x654dTf6fHA9iVUtJ2nHSZb2Ag.nSm', 'Admin User', false, false, false);
+
 -- 10 PRODUCTS
 INSERT INTO "product" (name, description, price, image, stock_quantity, category) VALUES
 ('Whey Protein Isolate', 'Sữa tăng cơ tinh khiết, hấp thụ nhanh', 1500000, 'https://cdn.xaxi.vn/tpcn/img/muscletech-isowhey-100-whey-protein-isolate-vanilla-5-lbs-2-27-kg-135924-631656717617.jpg', 50, 'PROTEIN'),

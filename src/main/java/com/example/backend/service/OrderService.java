@@ -127,4 +127,33 @@ public class OrderService {
     private OrderItemResponseDTO toOrderItemResponseDTO(OrderItem orderItem) {
         return new OrderItemResponseDTO(orderItem.getId(),orderItem.getQuantity(),orderItem.getProduct().getId(),orderItem.getProduct().getName(),orderItem.getProduct().getDescription(),orderItem.getProduct().getPrice(),orderItem.getProduct().getImage());
     }
+
+    public ResponseEntity<List<OrderListResponseDTO>> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        List<OrderListResponseDTO> orderListResponse = new ArrayList<>();
+        for (Order order : orders) {
+            List<OrderItem> orderItems = orderItemRepository.findOrderItemsByOrderId(order.getId());
+            OrderListResponseDTO orderListResponseDTO = new OrderListResponseDTO();
+            List<OrderItemResponseDTO> orderItemResponseDTO = new ArrayList<>();
+            orderListResponseDTO.setOrder(toOrderResponseDTO(order));
+            for (OrderItem orderItem : orderItems) {
+                orderItemResponseDTO.add(toOrderItemResponseDTO(orderItem));
+            }
+            orderListResponseDTO.setOrderItems(orderItemResponseDTO);
+            orderListResponse.add(orderListResponseDTO);
+        }
+        return ResponseEntity.ok(orderListResponse);
+    }
+
+    @Transactional
+    public ResponseEntity<OrderResponseDTO> updateOrderStatus(Integer id, Order.Status status) {
+        Optional<Order> orderOpt = orderRepository.findById(id);
+        if (!orderOpt.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Order order = orderOpt.get();
+        order.setStatus(status);
+        order = orderRepository.save(order);
+        return ResponseEntity.ok(toOrderResponseDTO(order));
+    }
 }
